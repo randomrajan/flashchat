@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flashchat/components/rounded_button.dart';
+import 'package:flashchat/constants.dart';
+import 'registration_screen.dart';
+import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = 'login_screen';
@@ -8,6 +12,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = FirebaseAuth.instance;
+  String email;
+  String password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,53 +37,28 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 48.0,
             ),
             TextField(
+              keyboardType: TextInputType.emailAddress,
+              textAlign: TextAlign.center,
               onChanged: (value) {
                 //Do something with the user input.
+                email = value;
               },
-              decoration: InputDecoration(
+              decoration: kTextFieldDecoration.copyWith(
                 hintText: 'Enter your email',
-                hintStyle: TextStyle(fontSize: 10.0, color: Colors.black, ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
               ),
             ),
             SizedBox(
               height: 8.0,
             ),
             TextField(
+              obscureText: true,
+              textAlign: TextAlign.center,
               onChanged: (value) {
                 //Do something with the user input.
+                password = value;
               },
-              decoration: InputDecoration(
-                hintText: 'Enter your password.',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
+              decoration: kTextFieldDecoration.copyWith(
+                hintText: 'enter your password',
               ),
             ),
             SizedBox(
@@ -83,8 +66,19 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             RoundedButton(
               colour: Colors.lightBlueAccent,
-              onPressed: () {
+              onPressed: () async {
                 //Implement login functionality.
+                // print(email);
+                // print(password);
+                try{
+                  final user = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
+                  if(user != null){
+                    Navigator.pushNamed(context, ChatScreen.id);
+                  }
+                }
+                catch(e){
+                  print(e);
+                }
               },
               title: 'Log In',
             ),

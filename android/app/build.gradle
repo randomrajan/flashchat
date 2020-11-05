@@ -29,6 +29,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 28
 
+    buildToolsVersion '29.0.0'
+
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
